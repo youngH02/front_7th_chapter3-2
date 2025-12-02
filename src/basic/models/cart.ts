@@ -17,8 +17,6 @@
 
 import { CartItem, Coupon, Product } from "../../types";
 
-// TODO: 구현
-
 export const calculateItemTotal = (
   cart: CartItem[],
   item: CartItem
@@ -104,39 +102,6 @@ export const addItemToCart = (
   return [...cart, { product, quantity: 1 }];
 };
 
-
-// export const removeFromCart = useCallback((productId: string) => {
-//   setCart((prevCart) =>
-//     prevCart.filter((item) => item.product.id !== productId)
-//   );
-// }, []);
-
-// const updateQuantity = useCallback(
-//   (productId: string, newQuantity: number) => {
-//     if (newQuantity <= 0) {
-//       removeFromCart(productId);
-//       return;
-//     }
-
-//     const product = products.find((p) => p.id === productId);
-//     if (!product) return;
-
-//     const maxStock = product.stock;
-//     if (newQuantity > maxStock) {
-//       addNotification(`재고는 ${maxStock}개까지만 있습니다.`, "error");
-//       return;
-//     }
-
-//     setCart((prevCart) =>
-//       prevCart.map((item) =>
-//         item.product.id === productId
-//           ? { ...item, quantity: newQuantity }
-//           : item
-//       )
-//     );
-//   },
-//   [products, removeFromCart, addNotification, getRemainingStock]
-// );
 
 export const getRemainingStock = (
   cart: CartItem[],
