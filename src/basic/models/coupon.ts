@@ -2,20 +2,25 @@
 
 import { Coupon } from "../../types";
 
-
-export const addCouponToList = (coupons: Coupon[], newCoupon: Coupon): Coupon[] => {
-
-  const existingCoupon = coupons.find((coupon) => coupon.code === newCoupon.code);
+export const addCouponToList = (
+  coupons: Coupon[],
+  newCoupon: Coupon
+): Coupon[] => {
+  const existingCoupon = coupons.find(
+    (coupon) => coupon.code === newCoupon.code
+  );
 
   if (existingCoupon) {
     return coupons;
   }
 
-
   return [...coupons, newCoupon];
 };
 
-export const deleteCouponToList = (coupons: Coupon[], couponCode: string): Coupon[] => {
+export const deleteCouponToList = (
+  coupons: Coupon[],
+  couponCode: string
+): Coupon[] => {
   return coupons.filter((coupon) => coupon.code !== couponCode);
 };
 /**
@@ -23,8 +28,8 @@ export const deleteCouponToList = (coupons: Coupon[], couponCode: string): Coupo
  */
 export const formatCouponDiscount = (coupon: Coupon): string => {
   return coupon.discountType === "amount"
-    ? `${coupon.discountValue.toLocaleString()}원`
-    : `${coupon.discountValue}%`;
+    ? `${coupon.discountValue.toLocaleString()}원 할인`
+    : `${coupon.discountValue}% 할인`;
 };
 
 /**

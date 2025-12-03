@@ -3,6 +3,8 @@ import ProductListTable from "../../components/adminPage/ProductListTable";
 import ProductForm from "../../components/adminPage/ProductForm";
 import { useProducts } from "../../hooks/useProducts";
 import { ProductWithUI } from "../../../types";
+import Section from "../../components/_common/Section";
+import Button from "../../components/_common/Button";
 
 interface IProps {}
 
@@ -51,18 +53,17 @@ const ProductManagement: FC<IProps> = () => {
   };
 
   return (
-    <section className="bg-white rounded-lg border border-gray-200">
-      <div className="p-6 border-b border-gray-200">
-        <div className="flex justify-between items-center">
-          <h2 className="text-lg font-semibold">상품 목록</h2>
-          <button
-            onClick={handleAddNew}
-            className="px-4 py-2 bg-gray-900 text-white text-sm rounded-md hover:bg-gray-800">
-            새 상품 추가
-          </button>
-        </div>
-      </div>
-
+    <Section
+      title="상품 목록"
+      action={
+        <Button
+          variant="solid"
+          color="secondary"
+          size="sm"
+          onClick={handleAddNew}>
+          새 상품 추가
+        </Button>
+      }>
       <ProductListTable
         products={products}
         onEdit={handleEditStart}
@@ -78,7 +79,7 @@ const ProductManagement: FC<IProps> = () => {
           isEditing={!!editingProductId}
         />
       )}
-    </section>
+    </Section>
   );
 };
 

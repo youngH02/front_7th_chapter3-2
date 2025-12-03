@@ -10,11 +10,13 @@ interface IProps {
 const CartPage: FC<IProps> = ({ searchTerm }) => {
   const {
     cart,
+    selectedCoupon,
     addToCart,
     removeFromCart,
     updateQuantity,
     emptyCart,
     getStock,
+    applyCoupon,
   } = useCart();
 
   return (
@@ -30,6 +32,8 @@ const CartPage: FC<IProps> = ({ searchTerm }) => {
       <div className="lg:col-span-1">
         <CartSummary
           cart={cart}
+          selectedCoupon={selectedCoupon}
+          applyCoupon={applyCoupon}
           removeFromCart={removeFromCart}
           updateQuantity={updateQuantity}
           emptyCart={emptyCart}

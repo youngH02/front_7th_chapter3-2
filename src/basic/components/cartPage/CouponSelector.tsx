@@ -5,11 +5,10 @@ import { getCouponOptionText } from "../../models/coupon";
 interface IProps {
   coupons: Coupon[];
   selectedCoupon: Coupon | null;
-  onApply: (coupon: Coupon) => void;
-  setSelectedCoupon: (coupon: Coupon | null) => void;
+  onApply: (coupon: Coupon | null) => void;
 }
 
-const CouponSelector: FC<IProps> = ({ coupons, selectedCoupon, onApply, setSelectedCoupon }) => {
+const CouponSelector: FC<IProps> = ({ coupons, selectedCoupon, onApply }) => {
   return (
     <section className="bg-white rounded-lg border border-gray-200 p-4">
       <div className="flex items-center justify-between mb-3">
@@ -21,8 +20,7 @@ const CouponSelector: FC<IProps> = ({ coupons, selectedCoupon, onApply, setSelec
           value={selectedCoupon?.code || ""}
           onChange={(e) => {
             const coupon = coupons.find((c) => c.code === e.target.value);
-            if (coupon) onApply(coupon);
-            else setSelectedCoupon(null);
+            onApply(coupon || null);
           }}>
           <option value="">쿠폰 선택</option>
           {coupons.map((coupon) => (

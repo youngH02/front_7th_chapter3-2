@@ -1,5 +1,5 @@
 import { type FC } from "react";
-import FormInput from "./FormInput";
+import FormInput from "../_common/FormInput";
 import Button from "../../_common/Button";
 import DiscountForm from "./DiscountForm";
 import { ProductWithUI } from "../../../../types";
@@ -31,7 +31,7 @@ const ProductForm: FC<IProps> = ({
             label="상품명"
             value={productForm.name}
             required
-            onChange={(value) =>
+            onValueChange={(value) =>
               setProductForm({ ...productForm, name: value })
             }
           />
@@ -39,7 +39,7 @@ const ProductForm: FC<IProps> = ({
           <FormInput
             label="설명"
             value={productForm.description || ""}
-            onChange={(value) =>
+            onValueChange={(value) =>
               setProductForm({ ...productForm, description: value })
             }
           />
@@ -50,7 +50,7 @@ const ProductForm: FC<IProps> = ({
             value={productForm.price === 0 ? "" : productForm.price}
             required
             placeholder="숫자만 입력"
-            onChange={(value) => {
+            onValueChange={(value) => {
               const numValue = value === "" ? 0 : parseInt(value);
               if (!isNaN(numValue) && numValue >= 0) {
                 setProductForm({ ...productForm, price: numValue });
@@ -64,7 +64,7 @@ const ProductForm: FC<IProps> = ({
             value={productForm.stock === 0 ? "" : productForm.stock}
             required
             placeholder="숫자만 입력"
-            onChange={(value) => {
+            onValueChange={(value) => {
               const numValue = value === "" ? 0 : parseInt(value);
               if (!isNaN(numValue) && numValue >= 0 && numValue <= 9999) {
                 setProductForm({ ...productForm, stock: numValue });

@@ -5,10 +5,12 @@ import ShoppingBagIcon from "../../components/_icons/ShoppingBagIcon";
 import { useCoupons } from "../../hooks/useCoupons";
 import CouponSelector from "../../components/cartPage/CouponSelector";
 import { calculateCartTotal } from "../../models/cart";
-import { CartItem } from "../../../types";
+import { CartItem, Coupon } from "../../../types";
 
 interface IProps {
   cart: CartItem[];
+  selectedCoupon: Coupon | null;
+  applyCoupon: (coupon: Coupon | null) => void;
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, newQuantity: number) => void;
   emptyCart: () => void;
@@ -16,17 +18,13 @@ interface IProps {
 
 const CartSummary: FC<IProps> = ({
   cart,
+  selectedCoupon,
+  applyCoupon,
   removeFromCart,
   updateQuantity,
   emptyCart,
 }) => {
-  const {
-    coupons,
-    applyCoupon,
-    selectedCoupon,
-    setSelectedCoupon,
-    removeCoupon,
-  } = useCoupons();
+  const { coupons } = useCoupons();
 
   const totals = calculateCartTotal(cart, selectedCoupon);
 
@@ -34,7 +32,6 @@ const CartSummary: FC<IProps> = ({
     const orderNumber = `ORD-${Date.now()}`;
     alert(`주문이 완료되었습니다. 주문번호: ${orderNumber}`);
     emptyCart();
-    removeCoupon();
   };
 
   return (
@@ -64,7 +61,6 @@ const CartSummary: FC<IProps> = ({
             coupons={coupons}
             selectedCoupon={selectedCoupon}
             onApply={applyCoupon}
-            setSelectedCoupon={setSelectedCoupon}
           />
           <PayItem totals={totals} onCheckout={handleCompleteOrder} />
         </>

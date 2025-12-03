@@ -1,15 +1,16 @@
 import type { InputHTMLAttributes, FC } from "react";
 
-interface IProps extends InputHTMLAttributes<HTMLInputElement> {
+interface IProps
+  extends Omit<InputHTMLAttributes<HTMLInputElement>, "onChange"> {
   label: string;
   value?: string | number;
-  onChange: (value: string) => void;
+  onValueChange: (value: string) => void;
 }
 
 const FormInput: FC<IProps> = ({
   label,
   value,
-  onChange,
+  onValueChange,
   required = false,
   placeholder,
 }) => {
@@ -21,7 +22,7 @@ const FormInput: FC<IProps> = ({
       <input
         type="text"
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => onValueChange(e.target.value)}
         className="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 px-3 py-2 border"
         placeholder={placeholder}
         required={required}
