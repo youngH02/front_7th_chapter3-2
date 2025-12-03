@@ -1,7 +1,6 @@
 import type { InputHTMLAttributes, FC } from "react";
 
-interface IProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, "onChange"> {
+interface IProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
   value?: string | number;
   onValueChange: (value: string) => void;

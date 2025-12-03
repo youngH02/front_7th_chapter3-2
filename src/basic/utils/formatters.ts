@@ -4,7 +4,6 @@
 // - formatDate(date: Date): string - 날짜를 YYYY-MM-DD 형식으로 포맷
 // - formatPercentage(rate: number): string - 소수를 퍼센트로 변환 (0.1 → 10%)
 
-// TODO: 구현
 
 export const formatPrice = (price: number, stock: number): string => {
   if (stock <= 0) {

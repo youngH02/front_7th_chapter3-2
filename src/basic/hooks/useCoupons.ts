@@ -1,13 +1,11 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { Coupon } from "../../types";
 import { initialCoupons } from "../constants";
 import { addCouponToList, deleteCouponToList } from "../models/coupon";
+import { useLocalStorage } from "../utils/hooks/useLocalStorage";
 
 export const useCoupons = () => {
-  const [coupons, setCoupons] = useState<Coupon[]>(() => {
-    const saved = localStorage.getItem("coupons");
-    return saved ? JSON.parse(saved) : initialCoupons;
-  });
+  const [coupons, setCoupons] = useLocalStorage("coupons", initialCoupons);
 
   const addCoupon = useCallback((newCoupon: Coupon) => {
     setCoupons((prev) => {

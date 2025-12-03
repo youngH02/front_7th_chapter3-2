@@ -4,29 +4,30 @@ import { Coupon } from "../../../types";
 import CouponList from "../../components/adminPage/CouponList";
 import CouponForm from "../../components/adminPage/CouponForm";
 import Section from "../../components/_common/Section";
+import { useForm } from "../../utils/hooks/useForm";
+import { formatCouponCode, parseDiscountValue } from "../../utils/validators";
 
-interface IProps {}
+const INITIAL_COUPON: Coupon = {
+  name: "",
+  code: "",
+  discountType: "amount",
+  discountValue: 0,
+};
 
-const CouponManagement: FC<IProps> = () => {
+const CouponManagement: FC = () => {
   const [showCouponForm, setShowCouponForm] = useState(false);
-  const [couponForm, setCouponForm] = useState<Coupon>({
-    name: "",
-    code: "",
-    discountType: "amount",
-    discountValue: 0,
-  });
+  const {
+    values: couponForm,
+    handleChange,
+    resetForm,
+  } = useForm<Coupon>(INITIAL_COUPON);
 
   const { coupons, addCoupon, deleteCoupon } = useCoupons();
 
   const handleCouponSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     addCoupon(couponForm);
-    setCouponForm({
-      name: "",
-      code: "",
-      discountType: "amount",
-      discountValue: 0,
-    });
+    resetForm();
     setShowCouponForm(false);
   };
 
@@ -41,7 +42,14 @@ const CouponManagement: FC<IProps> = () => {
       {showCouponForm && (
         <CouponForm
           couponForm={couponForm}
-          setCouponForm={setCouponForm}
+          onNameChange={(value) => handleChange("name", value)}
+          onCodeChange={(value) =>
+            handleChange("code", value, formatCouponCode)
+          }
+          onDiscountTypeChange={(value) => handleChange("discountType", value)}
+          onDiscountValueChange={(value) =>
+            handleChange("discountValue", parseDiscountValue(value))
+          }
           onSubmit={handleCouponSubmit}
           onCancel={() => setShowCouponForm(false)}
         />

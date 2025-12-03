@@ -1,12 +1,16 @@
 import { type FC } from "react";
-import FormInput from "../_common/FormInput";
+import FormInput from "../../_common/FormInput";
 import Button from "../../_common/Button";
 import DiscountForm from "./DiscountForm";
-import { ProductWithUI } from "../../../../types";
+import { ProductWithUI, Discount } from "../../../../types";
 
 interface IProps {
   productForm: Omit<ProductWithUI, "id">;
-  setProductForm: (productForm: Omit<ProductWithUI, "id">) => void;
+  onNameChange: (value: string) => void;
+  onDescriptionChange: (value: string) => void;
+  onPriceChange: (value: string) => void;
+  onStockChange: (value: string) => void;
+  onDiscountsChange: (value: Discount[]) => void;
   onSubmit: (e: React.FormEvent) => void;
   onClose: () => void;
   isEditing: boolean;
@@ -14,7 +18,11 @@ interface IProps {
 
 const ProductForm: FC<IProps> = ({
   productForm,
-  setProductForm,
+  onNameChange,
+  onDescriptionChange,
+  onPriceChange,
+  onStockChange,
+  onDiscountsChange,
   onSubmit,
   onClose,
   isEditing,
@@ -31,17 +39,13 @@ const ProductForm: FC<IProps> = ({
             label="상품명"
             value={productForm.name}
             required
-            onValueChange={(value) =>
-              setProductForm({ ...productForm, name: value })
-            }
+            onValueChange={onNameChange}
           />
 
           <FormInput
             label="설명"
             value={productForm.description || ""}
-            onValueChange={(value) =>
-              setProductForm({ ...productForm, description: value })
-            }
+            onValueChange={onDescriptionChange}
           />
 
           <FormInput
@@ -50,12 +54,7 @@ const ProductForm: FC<IProps> = ({
             value={productForm.price === 0 ? "" : productForm.price}
             required
             placeholder="숫자만 입력"
-            onValueChange={(value) => {
-              const numValue = value === "" ? 0 : parseInt(value);
-              if (!isNaN(numValue) && numValue >= 0) {
-                setProductForm({ ...productForm, price: numValue });
-              }
-            }}
+            onValueChange={onPriceChange}
           />
 
           <FormInput
@@ -64,20 +63,13 @@ const ProductForm: FC<IProps> = ({
             value={productForm.stock === 0 ? "" : productForm.stock}
             required
             placeholder="숫자만 입력"
-            onValueChange={(value) => {
-              const numValue = value === "" ? 0 : parseInt(value);
-              if (!isNaN(numValue) && numValue >= 0 && numValue <= 9999) {
-                setProductForm({ ...productForm, stock: numValue });
-              }
-            }}
+            onValueChange={onStockChange}
           />
         </div>
 
         <DiscountForm
           discounts={productForm.discounts}
-          onChange={(newDiscounts) =>
-            setProductForm({ ...productForm, discounts: newDiscounts })
-          }
+          onChange={onDiscountsChange}
         />
 
         <div className="flex justify-end gap-3">

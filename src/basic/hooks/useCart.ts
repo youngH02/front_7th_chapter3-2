@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CartItem, Coupon, ProductWithUI } from "../../types";
 import {
   addItemToCart,
@@ -7,18 +7,11 @@ import {
   removeItemFromCart,
   updateCartItemQuantity,
 } from "../models/cart";
+import { useLocalStorage } from "../utils/hooks/useLocalStorage";
 
 export const useCart = () => {
-  const [cart, setCart] = useState<CartItem[]>(() => {
-    const saved = localStorage.getItem("cart");
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [cart, setCart] = useLocalStorage<CartItem[]>("cart", []);
   const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
-
-  // cart 변경 시 localStorage 저장
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
-  }, [cart]);
 
   const addToCart = (product: ProductWithUI) => {
     setCart((prev) => {

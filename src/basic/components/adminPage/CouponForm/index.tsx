@@ -1,18 +1,24 @@
 import { type FC } from "react";
 import Button from "../../_common/Button";
 import { Coupon } from "../../../../types";
-import FormInput from "../_common/FormInput";
+import FormInput from "../../_common/FormInput";
 
 interface IProps {
   couponForm: Coupon;
-  setCouponForm: (couponForm: Coupon) => void;
+  onNameChange: (value: string) => void;
+  onCodeChange: (value: string) => void;
+  onDiscountTypeChange: (type: "amount" | "percentage") => void;
+  onDiscountValueChange: (value: string) => void;
   onSubmit: (e: React.FormEvent) => void;
   onCancel: () => void;
 }
 
 const CouponForm: FC<IProps> = ({
   couponForm,
-  setCouponForm,
+  onNameChange,
+  onCodeChange,
+  onDiscountTypeChange,
+  onDiscountValueChange,
   onSubmit,
   onCancel,
 }) => {
@@ -24,19 +30,14 @@ const CouponForm: FC<IProps> = ({
           <FormInput
             label="쿠폰명"
             value={couponForm.name}
-            onValueChange={(value) => setCouponForm({ ...couponForm, name: value })}
+            onValueChange={onNameChange}
             placeholder="신규 가입 쿠폰"
             required
           />
           <FormInput
             label="쿠폰 코드"
             value={couponForm.code}
-            onValueChange={(value) =>
-              setCouponForm({
-                ...couponForm,
-                code: value.toUpperCase(),
-              })
-            }
+            onValueChange={onCodeChange}
             placeholder="WELCOME2024"
             required
           />
@@ -47,10 +48,7 @@ const CouponForm: FC<IProps> = ({
             <select
               value={couponForm.discountType}
               onChange={(e) =>
-                setCouponForm({
-                  ...couponForm,
-                  discountType: e.target.value as "amount" | "percentage",
-                })
+                onDiscountTypeChange(e.target.value as "amount" | "percentage")
               }
               className="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 px-3 py-2 border text-sm">
               <option value="amount">정액 할인</option>
@@ -64,14 +62,7 @@ const CouponForm: FC<IProps> = ({
             value={
               couponForm.discountValue === 0 ? "" : couponForm.discountValue
             }
-            onValueChange={(value) => {
-              if (value === "" || /^\d+$/.test(value)) {
-                setCouponForm({
-                  ...couponForm,
-                  discountValue: value === "" ? 0 : parseInt(value),
-                });
-              }
-            }}
+            onValueChange={onDiscountValueChange}
             placeholder={couponForm.discountType === "amount" ? "5000" : "10"}
             required
           />

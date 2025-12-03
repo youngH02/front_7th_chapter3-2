@@ -39,7 +39,6 @@
 - [ ] 도메인 컴포넌트에 도메인 props는 남기고 props drilling을 유발하는 불필요한 props는 잘 제거했나요?
 - [ ] 전체적으로 분리와 재조립이 더 수월해진 결합도가 낮아진 코드가 되었나요?
 
-
 ## 과제 셀프회고
 
 <!-- 과제에 대한 회고를 작성해주세요 -->
@@ -51,3 +50,19 @@
 ### 이번 과제를 통해 앞으로 해보고 싶은게 있다면 알려주세요!
 
 ### 리뷰 받고 싶은 내용이나 궁금한 것에 대한 질문 편하게 남겨주세요 :)
+
+basic 에서, 관심사를 분리하고자 모든 로직을 이렇게 props로 전달하는게 맞을까요?
+
+```tsx
+<CouponForm
+  couponForm={couponForm}
+  onNameChange={(value) => handleChange("name", value)}
+  onCodeChange={(value) => handleChange("code", value, formatCouponCode)}
+  onDiscountTypeChange={(value) => handleChange("discountType", value)}
+  onDiscountValueChange={(value) =>
+    handleChange("discountValue", parseDiscountValue(value))
+  }
+  onSubmit={handleCouponSubmit}
+  onCancel={() => setShowCouponForm(false)}
+/>
+```

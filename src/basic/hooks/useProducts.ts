@@ -1,12 +1,12 @@
-import { useState } from "react";
 import { ProductWithUI } from "../../types";
 import { initialProducts } from "../constants";
+import { useLocalStorage } from "../utils/hooks/useLocalStorage";
 
 export const useProducts = () => {
-  const [products, setProducts] = useState<ProductWithUI[]>(() => {
-    const saved = localStorage.getItem("products");
-    return saved ? JSON.parse(saved) : initialProducts;
-  });
+  const [products, setProducts] = useLocalStorage<ProductWithUI[]>(
+    "products",
+    initialProducts
+  );
 
   const addProduct = (newProduct: Omit<ProductWithUI, "id">) => {
     const product: ProductWithUI = {

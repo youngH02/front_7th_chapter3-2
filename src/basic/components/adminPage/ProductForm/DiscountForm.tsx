@@ -2,6 +2,12 @@ import { type FC } from "react";
 import Button from "../../_common/Button";
 import { Discount } from "../../../../types";
 import CloseIcon from "../../_icons/CloseIcon";
+import {
+  addDiscount,
+  removeDiscount,
+  updateDiscount,
+  getDiscountRatePercent,
+} from "../../../models/discount";
 
 interface IProps {
   discounts: Discount[];
@@ -10,24 +16,19 @@ interface IProps {
 
 const DiscountForm: FC<IProps> = ({ discounts, onChange }) => {
   const handleQuantityChange = (index: number, value: number) => {
-    const newDiscounts = [...discounts];
-    newDiscounts[index] = { ...newDiscounts[index], quantity: value };
-    onChange(newDiscounts);
+    onChange(updateDiscount(discounts, index, { quantity: value }));
   };
 
-  const handleRateChange = (index: number, value: number) => {
-    const newDiscounts = [...discounts];
-    newDiscounts[index] = { ...newDiscounts[index], rate: value / 100 };
-    onChange(newDiscounts);
+  const handleRateChange = (index: number, ratePercent: number) => {
+    onChange(updateDiscount(discounts, index, { rate: ratePercent / 100 }));
   };
 
   const handleRemoveDiscount = (index: number) => {
-    const newDiscounts = discounts.filter((_, i) => i !== index);
-    onChange(newDiscounts);
+    onChange(removeDiscount(discounts, index));
   };
 
   const handleAddDiscount = () => {
-    onChange([...discounts, { quantity: 10, rate: 0.1 }]);
+    onChange(addDiscount(discounts));
   };
 
   return (
@@ -53,7 +54,7 @@ const DiscountForm: FC<IProps> = ({ discounts, onChange }) => {
             <span className="text-sm">개 이상 구매 시</span>
             <input
               type="number"
-              value={Math.round(discount.rate * 100)}
+              value={getDiscountRatePercent(discount.rate)}
               onChange={(e) =>
                 handleRateChange(index, parseInt(e.target.value) || 0)
               }
