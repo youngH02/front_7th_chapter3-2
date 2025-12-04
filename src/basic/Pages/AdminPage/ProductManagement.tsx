@@ -6,11 +6,8 @@ import { ProductWithUI } from "../../../types";
 import Section from "../../components/_common/Section";
 import Button from "../../components/_common/Button";
 import { useForm } from "../../utils/hooks/useForm";
-import {
-  parseDiscountValue,
-  isValidPrice,
-  isValidStock,
-} from "../../utils/validators";
+import { Notification } from "../../models/notificiation";
+import { validateStock, validatePrice } from "../../models/validation";
 
 const INITIAL_PRODUCT_FORM: Omit<ProductWithUI, "id"> = {
   name: "",
@@ -19,8 +16,10 @@ const INITIAL_PRODUCT_FORM: Omit<ProductWithUI, "id"> = {
   description: "",
   discounts: [],
 };
-
-const ProductManagement: FC = () => {
+interface IProps {
+  addNotification: (message: string, type: Notification["type"]) => void;
+}
+const ProductManagement: FC<IProps> = ({ addNotification }) => {
   const [showForm, setShowForm] = useState(false);
   const [editingProductId, setEditingProductId] = useState<string | null>(null);
   const {
@@ -30,7 +29,8 @@ const ProductManagement: FC = () => {
     setValues: setProductForm,
   } = useForm<Omit<ProductWithUI, "id">>(INITIAL_PRODUCT_FORM);
 
-  const { products, addProduct, updateProduct, deleteProduct } = useProducts();
+  const { products, addProduct, updateProduct, deleteProduct } =
+    useProducts(addNotification);
 
   const handleAddNew = () => {
     resetForm();
@@ -65,20 +65,42 @@ const ProductManagement: FC = () => {
   };
 
   const handleNameChange = (value: string) => handleChange("name", value);
-  const handleDescriptionChange = (value: string) => handleChange("description", value);
+  const handleDescriptionChange = (value: string) =>
+    handleChange("description", value);
   const handlePriceChange = (value: string) => {
-    const numValue = parseDiscountValue(value);
-    if (isValidPrice(numValue)) {
-      handleChange("price", numValue);
+    // 빈 문자열이거나 순수 숫자가 아니면 무시
+    if (value !== "" && !/^\d+$/.test(value)) {
+      return; // 이전 값 유지
     }
+
+    const numValue = value === "" ? 0 : parseInt(value);
+    const error = validatePrice(numValue);
+
+    if (error) {
+      addNotification(error, "error");
+      return;
+    }
+
+    handleChange("price", numValue);
   };
   const handleStockChange = (value: string) => {
-    const numValue = parseDiscountValue(value);
-    if (isValidStock(numValue)) {
-      handleChange("stock", numValue);
+    // 빈 문자열이거나 순수 숫자가 아니면 무시
+    if (value !== "" && !/^\d+$/.test(value)) {
+      return; // 이전 값 유지
     }
+
+    const numValue = value === "" ? 0 : parseInt(value);
+    const error = validateStock(numValue);
+
+    if (error) {
+      addNotification(error, "error");
+      return;
+    }
+
+    handleChange("stock", numValue);
   };
-  const handleDiscountsChange = (value: any) => handleChange("discounts", value);
+  const handleDiscountsChange = (value: any) =>
+    handleChange("discounts", value);
 
   return (
     <Section

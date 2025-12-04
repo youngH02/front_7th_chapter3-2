@@ -1,11 +1,7 @@
 import { type FC } from "react";
-import CloseIcon from "../../_icons/CloseIcon";
-
-export type Notification = {
-  id: string;
-  message: string;
-  type: "error" | "success" | "warning";
-};
+import CloseIcon from "../_icons/CloseIcon";
+import Button from "../_common/Button";
+import { Notification } from "../../models/notificiation";
 
 interface IProps {
   notifications: Notification[];
@@ -31,11 +27,13 @@ const NotificationList: FC<IProps> = ({ notifications, onClose }) => {
       {notifications.map((notif) => (
         <div key={notif.id} className={getNotificationClass(notif.type)}>
           <span className="mr-2">{notif.message}</span>
-          <button
-            onClick={() => onClose(notif.id)}
-            className="text-white hover:text-gray-200">
+          <Button
+            variant="ghost"
+            color="danger"
+            size="sm"
+            onClick={() => onClose(notif.id)}>
             <CloseIcon />
-          </button>
+          </Button>
         </div>
       ))}
     </div>

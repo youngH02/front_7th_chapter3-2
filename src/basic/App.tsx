@@ -1,46 +1,28 @@
 import { useState } from "react";
 import AdminPage from "./Pages/AdminPage";
 import CartPage from "./Pages/CartPage";
-import CartHeader from "./components/layout/CartHeader";
-import { useSearch } from "./hooks/useSearch";
-import NotificationList, {
-  type Notification,
-} from "./components/layout/NotificationList";
-import { useCart } from "./hooks/useCart";
-import AdminHeader from "./components/layout/AdminHeader";
+
+import { useNotification } from "./hooks/useNotification";
+import NotificationList from "./components/NotificationList";
 
 const App = () => {
   const [isAdmin, setIsAdmin] = useState(false);
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-  const { searchTerm, setSearchTerm } = useSearch();
-  const { cart } = useCart();
-
-  const handleCloseNotification = (id: string) => {
-    setNotifications((prev) => prev.filter((n) => n.id !== id));
-  };
-
-  const totalCartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const { notifications, addNotification, remove } = useNotification();
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <NotificationList
-        notifications={notifications}
-        onClose={handleCloseNotification}
-      />
+      <NotificationList notifications={notifications} onClose={remove} />
       {isAdmin ? (
-        <AdminHeader onChange={() => setIsAdmin(false)} />
+        <AdminPage
+          addNotification={addNotification}
+          onChange={() => setIsAdmin(false)}
+        />
       ) : (
-        <CartHeader
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          totalCount={totalCartCount}
+        <CartPage
+          addNotification={addNotification}
           onChange={() => setIsAdmin(true)}
         />
       )}
-
-      <main className="max-w-7xl mx-auto px-4 py-8">
-        {isAdmin ? <AdminPage /> : <CartPage searchTerm={searchTerm} />}
-      </main>
     </div>
   );
 };

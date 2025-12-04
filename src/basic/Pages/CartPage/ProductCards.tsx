@@ -1,17 +1,20 @@
 import { type FC } from "react";
-import { useProducts } from "../../hooks/useProducts";
 import ProductCard from "../../components/cartPage/ProductCard";
 import { ProductWithUI } from "../../../types";
 
 interface IProps {
   searchTerm?: string;
+  products: ProductWithUI[];
   addToCart: (product: ProductWithUI) => void;
   getStock: (product: ProductWithUI) => number;
 }
 
-const ProductCards: FC<IProps> = ({ searchTerm, addToCart, getStock }) => {
-  const { products } = useProducts();
-
+const ProductCards: FC<IProps> = ({
+  searchTerm,
+  products,
+  addToCart,
+  getStock,
+}) => {
   const filteredProducts = searchTerm
     ? products.filter(
         (product) =>

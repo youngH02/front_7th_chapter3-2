@@ -7,20 +7,27 @@ import {
   removeItemFromCart,
   updateCartItemQuantity,
 } from "../models/cart";
+import { Notification } from "../models/notificiation";
 import { useLocalStorage } from "../utils/hooks/useLocalStorage";
 
-export const useCart = () => {
+export const useCart = (
+  addNotification: (message: string, type: Notification["type"]) => void
+) => {
   const [cart, setCart] = useLocalStorage<CartItem[]>("cart", []);
   const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
 
   const addToCart = (product: ProductWithUI) => {
+    if (getStock(product) <= 0) {
+      addNotification("재고가 부족합니다!", "error");
+      return;
+    }
     setCart((prev) => {
       const newCart = addItemToCart(prev, product);
 
       if (newCart === prev) {
-        alert(`재고는 ${product.stock}개까지만 있습니다.`);
+        addNotification(`재고는 ${product.stock}개까지만 있습니다`, "error");
       }
-
+      addNotification("장바구니에 담았습니다", "success");
       return newCart;
     });
   };
@@ -30,7 +37,16 @@ export const useCart = () => {
   };
 
   const updateQuantity = (productId: string, newQuantity: number) => {
-    setCart((prev) => updateCartItemQuantity(prev, productId, newQuantity));
+    setCart((prev) => {
+      const item = prev.find((i) => i.product.id === productId);
+      if (item && newQuantity > item.product.stock) {
+        addNotification(
+          `재고는 ${item.product.stock}개까지만 있습니다`,
+          "error"
+        );
+      }
+      return updateCartItemQuantity(prev, productId, newQuantity);
+    });
   };
 
   const emptyCart = () => {
@@ -49,13 +65,15 @@ export const useCart = () => {
 
     const { totalAfterDiscount } = calculateTotal();
 
-    // TODO: 이 로직도 models/cart로 이동하면 더 좋을 듯
     if (totalAfterDiscount < 10000 && coupon.discountType === "percentage") {
-      alert("percentage 쿠폰은 10,000원 이상 구매 시 사용 가능합니다.");
+      addNotification(
+        "percentage 쿠폰은 10,000원 이상 구매 시 사용 가능합니다.",
+        "warning"
+      );
       return;
     }
-
     setSelectedCoupon(coupon);
+    addNotification("쿠폰이 적용되었습니다", "success");
   };
 
   const getStock = (product: ProductWithUI) => {

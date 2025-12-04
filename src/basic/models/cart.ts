@@ -125,9 +125,15 @@ export const updateCartItemQuantity = (
     return removeItemFromCart(cart, productId);
   }
 
-  return cart.map((item) =>
-    item.product.id === productId ? { ...item, quantity: newQuantity } : item
-  );
+  return cart.map((item) => {
+    if (item.product.id === productId) {
+      // 재고 체크: 새 수량이 재고를 초과하면 재고만큼만 설정
+      const maxQuantity = item.product.stock;
+      const validQuantity = Math.min(newQuantity, maxQuantity);
+      return { ...item, quantity: validQuantity };
+    }
+    return item;
+  });
 };
 
 export const getRemainingStock = (
